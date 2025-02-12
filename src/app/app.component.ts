@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RouterOutlet } from '@angular/router';
@@ -12,12 +13,14 @@ import { CommonModule } from '@angular/common';
 })
 export class AppComponent implements OnInit {
   title = 'memory-game';
-  numberOfPlayers = 1;
+  numberOfPlayers: number; // Ensure type is specified
   cards: any[] = [];
   flippedCards: any[] = [];
   gameWon = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.numberOfPlayers = 0; // Initialize the variable
+  }
 
   ngOnInit() {
     this.fetchStarWarsCharacters();
