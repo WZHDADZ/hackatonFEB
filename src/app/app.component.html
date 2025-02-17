@@ -7,6 +7,9 @@
       <option value="2">2 Players</option>
     </select>
   </div>
+  <div *ngIf="numberOfPlayers > 1" class="player-turn">
+    <p>Current Player: {{ currentPlayer }}</p>
+  </div>
   <div class="grid">
     <div *ngFor="let card of cards" class="card" [class.flipped]="card.flipped" (click)="flipCard(card)" tabindex="0">
       <div class="card-front">
@@ -17,8 +20,13 @@
       </div>
     </div>
   </div>
+  <div class="player-scores">
+    <p *ngIf="numberOfPlayers > 1">Player 1 Score: {{ playerScores[0] }}</p>
+    <p *ngIf="numberOfPlayers > 1">Player 2 Score: {{ playerScores[1] }}</p>
+  </div>
   <div *ngIf="gameWon" class="winning-message">
-    <p>Congratulations! You've matched all pairs!</p>
+    <p *ngIf="numberOfPlayers === 1">Congratulations! You've matched all pairs!</p>
+    <p *ngIf="numberOfPlayers > 1">Congratulations! Player {{ winner }} wins!</p>
   </div>
 </div>
 
@@ -30,6 +38,10 @@
   }
 
   .player-selection {
+    margin-bottom: 20px;
+  }
+
+  .player-turn {
     margin-bottom: 20px;
   }
 
