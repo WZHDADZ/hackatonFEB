@@ -17,9 +17,15 @@ export class AppComponent implements OnInit {
   cards: any[] = [];
   flippedCards: any[] = [];
   gameWon = false;
+  currentPlayer: number; // Track the current player's turn
+  playerScores: number[]; // Track the scores of both players
+  winner: number | null; // Track the winner
 
   constructor(private http: HttpClient) {
     this.numberOfPlayers = 0; // Initialize the variable
+    this.currentPlayer = 1; // Initialize the current player
+    this.playerScores = [0, 0]; // Initialize player scores
+    this.winner = null; // Initialize the winner
   }
 
   ngOnInit() {
@@ -51,6 +57,8 @@ export class AppComponent implements OnInit {
 
     if (this.flippedCards.length === 2) {
       this.checkForMatch();
+    } else {
+      this.switchPlayerTurn();
     }
   }
 
@@ -58,16 +66,31 @@ export class AppComponent implements OnInit {
     const [card1, card2] = this.flippedCards;
 
     if (card1.id === card2.id) {
+      this.playerScores[this.currentPlayer - 1]++; // Update player score
       this.flippedCards = [];
       if (this.cards.every(card => card.flipped)) {
-        this.gameWon = true;
+        this.declareWinner();
       }
     } else {
       setTimeout(() => {
         card1.flipped = false;
         card2.flipped = false;
         this.flippedCards = [];
+        this.switchPlayerTurn();
       }, 1000);
+    }
+  }
+
+  switchPlayerTurn() {
+    if (this.numberOfPlayers > 1) {
+      this.currentPlayer = this.currentPlayer === 1 ? 2 : 1;
+    }
+  }
+
+  declareWinner() {
+    this.gameWon = true;
+    if (this.numberOfPlayers > 1) {
+      this.winner = this.playerScores[0] > this.playerScores[1] ? 1 : 2;
     }
   }
 }

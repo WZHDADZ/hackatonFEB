@@ -97,4 +97,55 @@ describe('AppComponent', () => {
 
     expect(app.gameWon).toBeTrue();
   });
+
+  it('should switch player turns after flipping a card', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+
+    app.numberOfPlayers = 2;
+    app.currentPlayer = 1;
+
+    const card = { id: 1, name: 'Luke Skywalker', image: 'luke.jpg', flipped: false };
+    app.cards = [card];
+
+    app.flipCard(card);
+    expect(app.currentPlayer).toBe(2);
+  });
+
+  it('should update player scores when a match is found', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+
+    app.numberOfPlayers = 2;
+    app.currentPlayer = 1;
+    app.playerScores = [0, 0];
+
+    const card1 = { id: 1, name: 'Luke Skywalker', image: 'luke.jpg', flipped: false };
+    const card2 = { id: 1, name: 'Luke Skywalker', image: 'luke.jpg', flipped: false };
+
+    app.cards = [card1, card2];
+
+    app.flipCard(card1);
+    app.flipCard(card2);
+
+    expect(app.playerScores[0]).toBe(1);
+  });
+
+  it('should declare the winner based on scores', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+
+    app.numberOfPlayers = 2;
+    app.playerScores = [3, 2];
+
+    const card1 = { id: 1, name: 'Luke Skywalker', image: 'luke.jpg', flipped: true };
+    const card2 = { id: 1, name: 'Luke Skywalker', image: 'luke.jpg', flipped: true };
+    const card3 = { id: 2, name: 'Darth Vader', image: 'vader.jpg', flipped: true };
+    const card4 = { id: 2, name: 'Darth Vader', image: 'vader.jpg', flipped: true };
+
+    app.cards = [card1, card2, card3, card4];
+    app.checkForMatch();
+
+    expect(app.winner).toBe(1);
+  });
 });
